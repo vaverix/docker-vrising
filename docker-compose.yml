@@ -2,20 +2,25 @@ services:
   vrising:
     image: trueosiris/vrising
     environment:
-      - TZ=Europe/Paris
-      - SERVERNAME=vrising-TrueOsiris
+      - TZ=Europe/Warsaw
+      - SERVERNAME=vrising-vav-Zasia
+      - WINEDLLOVERRIDES="winhttp=n,b"
     volumes:
       - type: bind
-        source: /your/host/vrising/server
+        source: /DATA/AppData/vrising/server
         target: /mnt/vrising/server
         bind:
           create_host_path: true
       - type: bind
-        source: /your/host/vrising/persistentdata
+        source: /DATA/AppData/vrising/persistentdata
         target: /mnt/vrising/persistentdata
         bind:
           create_host_path: true
-    ports:
+      - type: bind
+        source: /DATA/AppData/vrising/mods
+        target: /mnt/vrising/mods
+        bind:
+          create_host_path: true
       - '9876:9876/udp'
       - '9877:9877/udp'
     restart: unless-stopped
