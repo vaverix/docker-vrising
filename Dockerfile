@@ -7,6 +7,8 @@ ARG DEBIAN_FRONTEND="noninteractive"
 RUN apt-get update && \
     apt-get upgrade -y
 
+RUN apt-get install -y apt-utils wget software-properties-common tzdata
+
 RUN useradd -m steam && cd /home/steam && \
     echo steam steam/question select "I AGREE" | debconf-set-selections && \
     echo steam steam/license note '' | debconf-set-selections
@@ -20,7 +22,6 @@ RUN mkdir -pm755 /etc/apt/keyrings && \
     wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
     
 RUN apt-get update
-RUN apt-get install -y apt-utils wget software-properties-common tzdata
 RUN apt-get install -y --install-recommends winehq-stable
 RUN apt-get install -y gdebi-core libgl1-mesa-glx:i386 winbind xvfb
 RUN apt install steam steamcmd
