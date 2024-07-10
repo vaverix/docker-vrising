@@ -22,10 +22,10 @@ RUN mkdir -pm755 /etc/apt/keyrings && \
     wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
     
 RUN apt-get update
-RUN apt-get install -y --install-recommends winehq-stable
-RUN apt-get install -y gdebi-core libgl1-mesa-glx:i386 winbind xvfb
-RUN apt install steam steamcmd
-#RUN apt install -y xserver-xorg
+RUN apt-get install -y --install-recommends winehq-stable winbind
+RUN apt-get install -y gdebi-core libgl1-mesa-glx:i386 
+RUN apt-get install -y xserver-xorg xvfb
+RUN apt install -y steam steamcmd
 
 RUN apt-get remove -y --purge wget software-properties-common && \
     apt-get clean autoclean && \
