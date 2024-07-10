@@ -1,5 +1,5 @@
 FROM ubuntu:22.04 
-LABEL maintainer="Tim Chaubet"
+LABEL maintainer="vaverix"
 VOLUME ["/mnt/vrising/server", "/mnt/vrising/persistentdata"]
 
 ARG DEBIAN_FRONTEND="noninteractive"
