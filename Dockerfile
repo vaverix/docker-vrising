@@ -30,8 +30,6 @@ RUN apt-get remove -y --purge wget software-properties-common && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
-#RUN apt install -y xserver-xorg 
-
 RUN ln -s /usr/games/steamcmd /usr/bin/steamcmd
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
