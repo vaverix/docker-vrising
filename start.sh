@@ -108,10 +108,6 @@ cp "$m/winhttp.dll"             "$s/winhttp.dll"
 
 export WINEDLLOVERRIDES="winhttp=n,b"
 
-echo "Generating initial Wine configuration..."
-winecfg
-sleep 5
-
 echo "Starting V Rising Dedicated Server with name $SERVERNAME"
 echo "Trying to remove /tmp/.X0-lock"
 rm /tmp/.X0-lock 2>&1
