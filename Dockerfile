@@ -7,24 +7,30 @@ ARG DEBIAN_FRONTEND="noninteractive"
 RUN useradd -m steam && cd /home/steam && \
     echo steam steam/question select "I AGREE" | debconf-set-selections && \
     echo steam steam/license note '' | debconf-set-selections && \
-    apt purge steam steamcmd && \
-    apt-get update -y && \
+    apt purge steam steamcmd
+    
+RUN apt-get update -y && \
     apt-get upgrade -y && \
-    apt-get install -y apt-utils wget software-properties-common tzdata && \
-    add-apt-repository multiverse && \
-    dpkg --add-architecture i386 && \
-    mkdir -pm755 /etc/apt/keyrings && \
+    apt-get install -y apt-utils wget software-properties-common tzdata
+    
+RUN add-apt-repository multiverse && \
+    dpkg --add-architecture i386
+    
+RUN mkdir -pm755 /etc/apt/keyrings && \
     wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key && \
-    wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources && \
-    apt-get update -y && \
-    apt-get install -y --install-recommends winehq-stable && \
-    apt-get install -y gdebi-core libgl1-mesa-glx:i386 steam steamcmd winbind xvfb && \
-    apt-get remove -y --purge wget software-properties-common && \
+    wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
+RUN apt-get update -y
+RUN apt-get install -y --install-recommends winehq-stable
+
+#RUN apt install -y xserver-xorg
+RUN apt-get install -y gdebi-core libgl1-mesa-glx:i386 steam steamcmd winbind xvfb
+
+RUN apt-get remove -y --purge wget software-properties-common && \
     apt-get clean autoclean && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
-#RUN apt install -y xserver-xorg xvfb
+#RUN apt install -y xserver-xorg 
 
 RUN ln -s /usr/games/steamcmd /usr/bin/steamcmd
 COPY start.sh /start.sh
