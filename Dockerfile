@@ -23,8 +23,8 @@ RUN mkdir -pm755 /etc/apt/keyrings && \
     
 RUN apt-get update
 RUN apt-get install -y --install-recommends winehq-stable winbind
-RUN apt-get install -y gdebi-core libgl1-mesa-glx:i386 
-RUN apt-get install -y xserver-xorg xvfb
+RUN apt-get install -y gdebi-core libgl1-mesa-glx:i386 xvfb
+#RUN apt-get install -y xserver-xorg xvfb
 RUN apt install -y steam steamcmd
 
 RUN apt-get remove -y --purge wget software-properties-common && \
