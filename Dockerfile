@@ -4,6 +4,9 @@ VOLUME ["/mnt/vrising/server", "/mnt/vrising/persistentdata", "/mnt/vrising/mods
 
 ARG DEBIAN_FRONTEND="noninteractive"
 
+RUN apt-get update && \
+    apt-get upgrade -y
+
 RUN useradd -m steam && cd /home/steam && \
     echo steam steam/question select "I AGREE" | debconf-set-selections && \
     echo steam steam/license note '' | debconf-set-selections
@@ -16,10 +19,7 @@ RUN mkdir -pm755 /etc/apt/keyrings && \
     wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key && \
     wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
     
-RUN apt update -y && \
-    apt-get update && \
-    apt-get upgrade -y
-    
+RUN apt-get update
 RUN apt-get install -y apt-utils wget software-properties-common tzdata
 RUN apt-get install -y --install-recommends winehq-stable
 RUN apt-get install -y gdebi-core libgl1-mesa-glx:i386 winbind xvfb
