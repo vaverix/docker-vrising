@@ -1,6 +1,7 @@
 #!/bin/bash
 s=/mnt/vrising/server
 p=/mnt/vrising/persistentdata
+m=/mnt/vrising/mods
 
 term_handler() {
 	echo "Shutting down Server"
@@ -23,6 +24,11 @@ cleanup_logs() {
 }
 
 trap 'term_handler' SIGTERM
+
+echo "Dockerized V Rising dedicated server in an Ubuntu 22.04 container with Wine."
+echo "Originally created by TrueOsiris (https://github.com/TrueOsiris/docker-vrising)"
+echo "Modified by vaverix"
+sleep 3
 
 if [ -z "$LOGDAYS" ]; then
 	LOGDAYS=30
@@ -93,6 +99,19 @@ cd "$s" || {
 	echo "Failed to cd to $s"
 	exit 1
 }
+
+echo "Setting up mods"
+cp -r "$m/BepInEx"              "$s/BepInEx"
+cp -r "$m/dotnet"               "$s/dotnet"
+cp "$m/doorstop_config.ini"     "$s/doorstop_config.ini"
+cp "$m/winhttp.dll"             "$s/winhttp.dll"
+
+export WINEDLLOVERRIDES="winhttp=n,b"
+
+echo "Generating initial Wine configuration..."
+winecfg
+sleep 5
+
 echo "Starting V Rising Dedicated Server with name $SERVERNAME"
 echo "Trying to remove /tmp/.X0-lock"
 rm /tmp/.X0-lock 2>&1
