@@ -1,9 +1,7 @@
 FROM ubuntu:22.04 
-LABEL maintainer="Tim Chaubet"
 VOLUME ["/mnt/vrising/server", "/mnt/vrising/persistentdata"]
 
 ARG DEBIAN_FRONTEND="noninteractive"
-
 
 RUN useradd -m steam && cd /home/steam && \
     echo steam steam/question select "I AGREE" | debconf-set-selections && \
@@ -18,7 +16,7 @@ RUN useradd -m steam && cd /home/steam && \
     wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources && \
     apt-get update -y && \
     apt-get install -y --install-recommends winehq-stable && \
-    apt-get install -y gdebi-core libgl1-mesa-glx:i386 steam steamcmd winbind xvfb && \
+    apt-get install -y gdebi-core libgl1-mesa-glx:i386 steam steamcmd winbind winetricks xvfb tzdata && \
     apt-get remove -y --purge wget software-properties-common && \
     apt-get clean autoclean && \
     apt-get autoremove -y && \
@@ -26,6 +24,6 @@ RUN useradd -m steam && cd /home/steam && \
 
 RUN ln -s /usr/games/steamcmd /usr/bin/steamcmd
 
-COPY start.sh /start.sh
-RUN chmod +x /start.sh
-CMD ["/start.sh"]
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+CMD ["/entrypoint.sh"]
