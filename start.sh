@@ -25,19 +25,8 @@ cleanup_logs() {
 
 trap 'term_handler' SIGTERM
 
-echo "Dockerized V Rising dedicated server in an Ubuntu 22.04 container with Wine."
-echo "Originally created by TrueOsiris (https://github.com/TrueOsiris/docker-vrising)"
-echo "Modified by vaverix"
-sleep 3
-
 if [ -z "$LOGDAYS" ]; then
 	LOGDAYS=30
-fi
-if [[ -n $UID ]]; then
-	usermod -u "$UID" docker 2>&1
-fi
-if [[ -n $GID ]]; then
-	groupmod -g "$GID" docker 2>&1
 fi
 if [ -z "$SERVERNAME" ]; then
 	SERVERNAME="trueosiris-V"
@@ -100,20 +89,36 @@ cd "$s" || {
 	exit 1
 }
 
-echo "Setting up mods"
-cp -r "$m/BepInEx"              "$s/BepInEx"
-cp -r "$m/dotnet"               "$s/dotnet"
-cp "$m/doorstop_config.ini"     "$s/doorstop_config.ini"
-cp "$m/winhttp.dll"             "$s/winhttp.dll"
 
-export WINEDLLOVERRIDES="winhttp=n,b"
+echo "Cleaning  up old mods (if any)"
+rm -rf BepInEx
+rm -rf dotnet
+rm -f doorstop_config.ini
+rm -f winhttp.dll
+
+if [ "${ENABLE_MODS}" = 1 ]; then
+    echo "Setting up mods"
+    cp -r  "$m/BepInEx"             "$s/BepInEx"
+    cp -r  "$m/dotnet"              "$s/dotnet"
+    cp     "$m/doorstop_config.ini" "$s/doorstop_config.ini"
+    cp     "$m/winhttp.dll"         "$s/winhttp.dll"
+    export WINEDLLOVERRIDES="winhttp=n,b"
+fi
 
 echo "Starting V Rising Dedicated Server with name $SERVERNAME"
 echo "Trying to remove /tmp/.X0-lock"
 rm /tmp/.X0-lock 2>&1
 echo " "
+
+
+echo "Generating initial Wine configuration..."
+winecfg
+sleep 5
+
+
 echo "Starting Xvfb"
 Xvfb :0 -screen 0 1024x768x16 &
+
 echo "Launching wine64 V Rising"
 echo " "
 v() {
@@ -124,5 +129,5 @@ v
 ServerPID=$!
 
 # Tail log file and waits for Server PID to exit
-/usr/bin/tail -n 0 -f "$p/$logfile" &
+/usr/bin/tail -n 0 -F "$p/$logfile" &
 wait $ServerPID
